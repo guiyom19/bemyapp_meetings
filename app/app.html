@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta Charest="UTF-8">
+		<title>Conférences</title>
+
+		<!-- Javascripts nécessaires -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+		<script src="JavaScript/lib/ng-file-upload-shim.js"></script>
+		<script src="JavaScript/lib/ng-file-upload.js"></script>
+		<script src="JavaScript/app.js"></script>
+		
+		<!-- Feuilles de styles et polices -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/meetings.css">
+		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+	</head>
+	<body ng-app="meetingModule" ng-controller="meetingHandler">
+
+		<!-- formulaire d'ajout de conférence -->
+        <form  id="meetingaddition">
+			<h2>Ajouter une conférence</h2>
+			<div class="form-group">
+				<label>Titre</label>
+				<input  type="text" class="form-control" ng-model="meeting.name" placeholder="Titre" required>
+			</div>
+			<div class="form-group">
+				<label>Description</label>
+				<input type='text' class="form-control" ng-model="meeting.description" placeholder="Description">
+			</div>
+			<div class="form-group">
+				<label>Date</label>
+				<input type='date' class="form-control" ng-model="meeting.date" required>
+			</div>
+			<div class="form-group">
+				<label>Logo </label>
+				<input type="file" ngf-select ng-model="meetingHandler.file" name="file" ngf-pattern="'image/*'" accept="image/*" required/>
+			</div>
+
+			<!-- envoi du formulaire -->
+			<button class="btn btn-success" ng-click="sendForm(meetingHandler.file)">Ajouter</button>
+		</form>
+		
+		<!-- liste des conférences -->
+		<div id="meetingslist">
+			<h2>Liste des conférences</h2>
+			Rechercher une conférence : <input type="text" class="form-control" ng-model="query">
+
+			<!-- filtre de rechercher par titre (name) et tri par date -->
+			<div class="meetinginfo" ng-repeat="meeting in meetings | filter:{name:query} | orderBy:'date':true">
+				<p><strong>{{meeting.name}}</strong></p>
+				<p>Description : {{meeting.description}}</p>
+				<p>Date : {{meeting.date | date: 'dd MMM yyyy'}}</p>
+				<img src="storage/{{meeting.logo}}">
+
+				<!-- modification -->
+				<button class="btn btn-default" ng-click="modifyMeeting(meeting)">Modifier</button>
+
+				<!-- suppression -->
+				<button class="btn btn-danger" ng-click="deleteMeeting(meeting)">Supprimer</button>
+			</div>
+		</div>
+
+		<!-- formulaire de modification de conférence -->
+		<div id="meetingedition"  ng-show='edit'>
+
+				<form>
+					<h2>Modifier la conférence</h2>
+					<div class="form-group">
+						<label>Titre</label>
+						<input  type="text" class="form-control" ng-model="meeting.name" placeholder="{{sheet.name}}">
+					</div>
+					<div class="form-group">
+						<label>Description</label>
+						<input type='text' class="form-control" ng-model="meeting.description" placeholder="{{sheet.description}}">
+					</div>
+					<div class="form-group">
+						<label>Date</label>
+						<input type='date' class="form-control" ng-model="meeting.date" placeholder="{{sheet.date}}">
+					</div>
+					<div class="form-group">
+						
+						<div class="form-group">
+							<label>Logo </label>
+							<input 
+			                type="file" 
+			                ngf-select 
+			                ng-model="meetingHandler.file" 
+			                name="file" 
+			                ngf-pattern="'image/*'"
+			                accept="image/*" 
+			                ngf-max-size="20MB" 
+			                required
+			                />
+						</div>
+					</div>
+
+					<!-- validation de la modification -->
+					<button class="btn btn-success" ng-click="doEdition(meetingHandler.file)">Valider</button>
+
+					<!-- annulation de la modification -->
+					<button class="btn btn-default" ng-click="cancelEdition()">Annuler</button>
+				</form>
+			</div>
+		
+</body>
+</html>

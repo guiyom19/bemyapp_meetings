@@ -1,0 +1,10 @@
+{
+  "dependencies": 
+  {
+    "express": "4.14",
+    "mongoose": "4.5.8",
+    "body-parser":"1.17.2",
+    "multer":"1.3.0",
+    "ng-file-upload":"12.2.13"
+  }
+}
